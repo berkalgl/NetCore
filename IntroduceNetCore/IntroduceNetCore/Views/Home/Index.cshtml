@@ -1,0 +1,18 @@
+﻿@model IEnumerable<IntroduceNetCore.Models.Product>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h1>This is Home/Index</h1>
+        <p>
+            Date: @ViewBag.Date.ToLongDateString()
+        </p>
+        <ul>
+            @foreach (var product in Model)
+            {
+                <li>@product.Name - @product.Price</li>
+            }
+        </ul>
+    </body>
+</html>

@@ -1,10 +1,22 @@
+using ECommerce.Data;
 using ECommerce.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<IProductService,MockProductService>();
+//builder.Services.AddScoped<IProductService,MockProductService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+//Set Session
+builder.Services.AddSession();
+
+var connectionString = builder.Configuration.GetConnectionString("db");
+//var config = builder.Configuration.GetSection("key")["key"];
+
+builder.Services.AddDbContext<ECommerceDbContext>(option => option.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
@@ -16,8 +28,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//get the instance of dbcontext which is scoped service
+var dbContext = app.Services.CreateScope().ServiceProvider.GetRequiredService<ECommerceDbContext>();
+
+Console.WriteLine("DB Initialization");
+//prepare DB
+PrepareDb.SeedData(dbContext);
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Adding session to middleware
+app.UseSession();
 
 app.UseRouting();
 

@@ -1,0 +1,39 @@
+﻿@model ShoppingCartCollection
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if(Model.ProductsInChart.Count == 0)
+{
+    <div class="alert alert-danger">There is no product in your cart</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Sum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model.ProductsInChart)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Product.Price * item.Quantity)</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>@Model.GetTotalPrice()</td>
+            </tr>
+        </tfoot>
+    </table>
+}
+

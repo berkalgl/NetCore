@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProductViewModel>
+﻿@model IEnumerable<Product>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -11,9 +11,13 @@
                 <div class="card">
                     <img class="card-img-top" src=@product.ImageUrl>
                     <div class="card-body">
-                        <h3>@product.Name</h3>
-                        <p>@product.Description</p>
-                        <small>@product.Price</small>
+                        <h3 class="card-title">@product.Name</h3>
+                        <p class="card-text">@product.Description</p>
+                        <p class="card-text">@product.Price</p>
+                        <form asp-action="AddToCart" asp-controller="Cart">
+                            <input type="hidden" value="@product.Id" name="Id">
+                            <button type="submit" class="btn btn-success">Add To Cart</button>
+                        </form>
                     </div>
                 </div>
             </div>

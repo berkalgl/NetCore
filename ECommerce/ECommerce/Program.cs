@@ -1,5 +1,6 @@
 using ECommerce.Data;
 using ECommerce.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddScoped<IProductService,MockProductService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IUserService, FakeUserService>();
 
 //Set Session
 builder.Services.AddSession();
@@ -17,6 +19,14 @@ var connectionString = builder.Configuration.GetConnectionString("db");
 //var config = builder.Configuration.GetSection("key")["key"];
 
 builder.Services.AddDbContext<ECommerceDbContext>(option => option.UseSqlServer(connectionString));
+
+//Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option =>
+    {
+        option.LoginPath = "/User/Login";
+        option.AccessDeniedPath = "/User/AccessDenied";
+    });
 
 var app = builder.Build();
 
@@ -42,6 +52,7 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

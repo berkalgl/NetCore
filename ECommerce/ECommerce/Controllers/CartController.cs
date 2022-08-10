@@ -1,4 +1,5 @@
-﻿using ECommerce.Models;
+﻿using ECommerce.Extensions;
+using ECommerce.Models;
 using ECommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -39,12 +40,15 @@ namespace ECommerce.Controllers
 
         private void SaveCartCollectionToSession(ShoppingCartCollection shoppingCartCollection)
         {
-            HttpContext.Session.SetString("cart", JsonSerializer.Serialize(shoppingCartCollection));
+
+            HttpContext.Session.SetJson("cart", shoppingCartCollection);
+
+            //HttpContext.Session.SetString("cart", JsonSerializer.Serialize(shoppingCartCollection));
         }
 
         private ShoppingCartCollection GetCartCollectionFromSession()
         {
-            return HttpContext.Session.GetString("cart") != null ? JsonSerializer.Deserialize<ShoppingCartCollection>(HttpContext.Session.GetString("cart")) : new ShoppingCartCollection();
+            return HttpContext.Session.GetJson<ShoppingCartCollection>("cart") ?? new ShoppingCartCollection();
         }
     }
 }

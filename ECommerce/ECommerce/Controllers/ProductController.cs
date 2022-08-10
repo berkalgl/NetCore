@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerce.Controllers
 {
+    //checking the roles in claim
+    [Authorize(Roles = "Admin,Editor")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -16,13 +18,15 @@ namespace ECommerce.Controllers
             _productService = productService;
         }
 
+        //Allow to anyone
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var products = _productService.GetProducts();
             return View(products);
         }
 
-        [Authorize]
+        //[Authorize(Roles = "Admin,Editor")]
         public IActionResult Create()
         {
             ViewBag.Categories = _categoryService.GetCategories().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString()});

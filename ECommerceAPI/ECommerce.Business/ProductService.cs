@@ -1,25 +1,32 @@
 ﻿using ECommerce.Business.DTOs.Response;
 using ECommerce.Data.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ECommerce.Entities;
 
 namespace ECommerce.Business
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductRepository productRepository;
 
         public ProductService(IProductRepository productRepository)
         {
-            _productRepository = productRepository;
+            this.productRepository = productRepository;
         }
 
-        public Task<IEnumerable<ProductListResponseDTO>> GetProductList()
+        public async Task<int> Create(Product product)
         {
-            var products = await _productRepository.GetAll();
+            await productRepository.Create(product);
+            return product.Id;
+        }
+
+        public async Task<Product> GetProduct(int id)
+        {
+            return await productRepository.GetEntity(id);
+        }
+
+        public async Task<IEnumerable<ProductListResponseDTO>> GetProductLists()
+        {
+            var products = await productRepository.GetAll();
             var response = products.Select(p => new ProductListResponseDTO
             {
                 Id = p.Id,
@@ -27,10 +34,15 @@ namespace ECommerce.Business
                 ImageUrl = p.ImageUrl,
                 Name = p.Name,
                 Price = p.Price,
-                Rating = p.Rating
             });
 
-            throw new NotImplementedException(); ;
+            return response;
+        }
+
+        public async Task<int> Update(Product product)
+        {
+            await productRepository.Update(product);
+            return product.Id;
         }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using ECommerce.Data.Data;
 using ECommerce.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Data.Repository
 {
@@ -23,9 +19,14 @@ namespace ECommerce.Data.Repository
             await _context.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Product>> GetAll()
+        public async Task<IList<Product>> GetAll()
         {
-            return _context.Products.AsEnumerableAsync();
+            return await _context.Products.ToListAsync(); ;
+        }
+
+        public async Task<Product> GetEntity(int id)
+        {
+            return await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task Update(Product entity)

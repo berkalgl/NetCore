@@ -1,5 +1,5 @@
 ﻿using ECommerce.Business;
-using Microsoft.AspNetCore.Http;
+using ECommerce.Business.DTOs.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Controllers
@@ -15,36 +15,50 @@ namespace ECommerce.API.Controllers
             _productService = productService;
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetProducts()
         {
-            var products = await _productService.GetProductList();
-
-            return products != null ? Ok(products) : NotFound();
-        }
-        public async Task<IActionResult> Add(ProductRequest productRequest)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            await _productService.Create(product);
-            //return Created("http://deneme.com", null)
-            return CreatedAtAction(nameof(GetById), routeValues: new { id = product.Id }, null);
+            var products = await _productService.GetProductLists();
+            if (products == null)
+            {
+                return NotFound();
+            }
+            return Ok(products);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetProduct(int id)
         {
+            var product = await _productService.GetProduct(id);
+            return Ok(product);
 
         }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, ProductRequest product)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest();
 
-            //control
-            var resultId = await _productService.Update(product);
-            return Ok(resultId);
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(ProductRequestDTO product)
+        {
+            if (ModelState.IsValid)
+            {
+                await _productService.Create(product);
+                return CreatedAtAction(nameof(GetProduct), routeValues: new { id = product.Id }, null);
+
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Product product)
+        {
+            //id'si verilen eleman var mı?
+            if (ModelState.IsValid)
+            {
+                var resultId = await _productService.Update(product);
+                //idempotent 
+                return Ok(product);
+
+            }
+            return BadRequest(ModelState);
         }
     }
 }

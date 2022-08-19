@@ -1,4 +1,5 @@
-﻿using ECommerce.Business.DTOs.Response;
+﻿using ECommerce.Business.DTOs.Request;
+using ECommerce.Business.DTOs.Response;
 using ECommerce.Entities;
 
 namespace ECommerce.Business
@@ -6,8 +7,8 @@ namespace ECommerce.Business
     public interface IProductService
     {
         Task<IEnumerable<ProductListResponseDTO>> GetProductLists();
-        Task<int> Create(Product product);
+        Task<int> Create(ProductRequestDTO product);
         Task<Product> GetProduct(int id);
-        Task<int> Update(Product product);
+        Task<int> Update(ProductRequestDTO product);
     }
 }

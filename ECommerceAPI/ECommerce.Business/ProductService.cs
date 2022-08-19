@@ -1,4 +1,5 @@
-﻿using ECommerce.Business.DTOs.Response;
+﻿using ECommerce.Business.DTOs.Request;
+using ECommerce.Business.DTOs.Response;
 using ECommerce.Data.Repository;
 using ECommerce.Entities;
 
@@ -13,10 +14,18 @@ namespace ECommerce.Business
             this.productRepository = productRepository;
         }
 
-        public async Task<int> Create(Product product)
+        public async Task<int> Create(ProductRequestDTO product)
         {
-            await productRepository.Create(product);
-            return product.Id;
+            var productEntity = new Product
+            {
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Price = product.Price
+            };
+
+            await productRepository.Create(productEntity);
+            return productEntity.Id;
         }
 
         public async Task<Product> GetProduct(int id)
@@ -39,10 +48,18 @@ namespace ECommerce.Business
             return response;
         }
 
-        public async Task<int> Update(Product product)
+        public async Task<int> Update(ProductRequestDTO product)
         {
-            await productRepository.Update(product);
-            return product.Id;
+            var productEntity = new Product
+            {
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Price = product.Price
+            };
+
+            await productRepository.Update(productEntity);
+            return productEntity.Id;
         }
     }
 }

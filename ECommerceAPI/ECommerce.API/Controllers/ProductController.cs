@@ -40,15 +40,15 @@ namespace ECommerce.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _productService.Create(product);
-                return CreatedAtAction(nameof(GetProduct), routeValues: new { id = product.Id }, null);
+                var createdProductId = await _productService.Create(product);
+                return CreatedAtAction(nameof(GetProduct), routeValues: new { id = createdProductId }, null);
 
             }
             return BadRequest(ModelState);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Product product)
+        public async Task<IActionResult> Update(int id, ProductRequestDTO product)
         {
             //id'si verilen eleman var mı?
             if (ModelState.IsValid)

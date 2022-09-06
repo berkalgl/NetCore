@@ -9,9 +9,9 @@ namespace ECommerce.Business
 {
     public class FakeUserService : IUserService
     {
-        private List<User> _users;
+        private readonly List<User> _users;
 
-        public FakeUserService(List<User> users)
+        public FakeUserService()
         {
             _users = new List<User>
             {
@@ -21,9 +21,14 @@ namespace ECommerce.Business
             };
         }
 
-        public User Validate(string username, string password)
+        public User Validate(string? username, string? password)
         {
-            return _users.FirstOrDefault(u => u.Username.Equals(username) && u.Password.Equals(password));
+            var user = _users.FirstOrDefault(u => u.Username.Equals(username) && u.Password.Equals(password));
+
+            if (user is null)
+                return null!;
+
+            return user;
         }
     }
 }

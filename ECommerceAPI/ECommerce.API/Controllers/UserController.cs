@@ -23,7 +23,7 @@ namespace ECommerce.API.Controllers
         {
             var user = _userService.Validate(loginViewModel.Username, loginViewModel.Password);
 
-            if (user == null)
+            if (user.Id != 0)
             {
                 return BadRequest(new { message = "Invalid login" });
             }

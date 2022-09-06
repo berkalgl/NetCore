@@ -4,6 +4,6 @@ namespace ECommerce.Business
 {
     public interface IUserService
     {
-        User Validate(string username, string password);
+        User Validate(string? username, string? password);
     }
 }
